@@ -15,5 +15,9 @@ app.get('/', (res, req) => {
 // socket set up
 const io = socket(server);
 io.on('connection', (socket) => {
-    console.log('Hello user connected' + " id -" + socket.id);
+    //receive data from index script
+    socket.on('chat', (data) => {
+        //send data to index script
+        io.sockets.emit('chat', data);
+    })
 })
