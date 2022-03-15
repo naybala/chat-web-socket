@@ -20,4 +20,8 @@ io.on('connection', (socket) => {
         //send data to index script
         io.sockets.emit('chat', data);
     })
+    //send typing data to index script
+    socket.on('typing', (name) => {
+        socket.broadcast.emit('typing', name);
+    });
 })

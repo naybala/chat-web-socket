@@ -67,7 +67,6 @@ h2 {
     font-family: Nunito;
     font-size: 16px;
   }
-
   button {
     background: #e63d27;
     color: #fff;
@@ -95,6 +94,7 @@ h2 {
         const output = document.querySelector("#output");
         const name = document.querySelector("#name");
         const message = document.querySelector("#message");
+        const feedback = document.querySelector("#feedback");
         const btnSend = document.querySelector("#send");
         btnSend.addEventListener("click",()=>{
             let data ={
@@ -104,11 +104,22 @@ h2 {
             //send data to custom.js
             socket.emit('chat',data);
         });
+            //typing data to custom js
+        message.addEventListener("keypress", () => {
+            socket.emit("typing", name.value);
+        });
         //receive data from custom js
         socket.on('chat',(data)=>{
-            output.innerHTML += `<p><strong>${data.name}</strong> : ${data.message}</p>`;
-           name.value = " ";
-           message.value = " ";
+                output.innerHTML += `<p><strong>${data.name}</strong> : ${data.message}</p>`;
+                // name.value = " ";
+                message.value = " ";
+        });
+         //receive typing data from custom js
+        socket.on("typing", (name) => {
+                feedback.innerHTML = `<p class="typing"><em>${name}</em> is typing...</p>`;
+                setTimeout(() => {
+                feedback.innerHTML = "";
+                }, 3000);
         });
     </script>
     <script src="custom.js"></script>
